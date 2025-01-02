@@ -1,0 +1,23 @@
+1. Do they want to delete the emails or move to archive ONLY? If archive only, remove policy tags for delete. 
+2. Get following data using MFC mapi:
+		a. Start MfcMapi and put it in Online mode by going to Tools – Options – select Use MDB_ONLINE and use MAPI_NO_CACHE.
+		b. Then go to Session – Logon – Open the profile name.
+		c. Double click on the mailbox
+		d. In the new window, expand Root Container – then expand Top of Information Store – right-click on Inbox (if that’s the folder that you want to check) – click on Open Associated Contents Table
+		e. Sort the results by Message Class and look for the only item that has Message Class = IPM.Configuration.MRM
+		f. Select the item and check its properties in the lower window – look for the property PR_ROAMING_XMLSTEAM – double click it and view the Steam(Text) window
+3. Also, get a sample email in msg format.
+
+
+Start-Transcript
+Get-RetentionPolicyTag | FL
+Get-Retentionpolicy -Identity "Retention Policy that is expected to work" | FL
+ 
+Get-MailboxFolderStatistics -Identity "User@domain.com" | Select-Object FolderPath,ItemsInFolder,FoldeSize
+Get-MailboxFolderStatistics -Identity "User@domain.com" -Archive | Select-Object FolderPath,ItemsInFolder,FoldeSize
+ 
+Export-MailboxDiagnosticLogs -Idenity "User@domain.com" -ComponentName MRM
+ 
+$logProps = Export-MailboxDiagnosticLogs "User@domain.com"-ExtendedProperties
+$xmlprops = [xml]($logProps.MailboxLog)
+$xmlprops.Properties.MailboxTable.Property | ? {$_.Name -like "ELC*"}
