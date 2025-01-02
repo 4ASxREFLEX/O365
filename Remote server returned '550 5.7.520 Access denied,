@@ -1,0 +1,5 @@
+Issue: 
+Remote server returned '550 5.7.520 Access denied, Your organization does not allow external forwarding
+As per the issue seems like forwarding is disabled for the mailbox
+SE to follow up with customer and try below 
+navigated to Admin center > Security > Policies & Rules > Threat Policies > Anti-Spam policies > Anti-Spam Outbound Policy > Edit Protection Settings > Automatic Forwarding (turned on )
